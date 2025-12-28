@@ -12,7 +12,7 @@ import { ChatInterface } from "@/components/chat/ChatInterface";
 import { FileTree } from "@/components/editor/FileTree";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { PreviewFrame } from "@/components/preview/PreviewFrame";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HeaderActions } from "@/components/HeaderActions";
 
 interface MainContentProps {
@@ -58,29 +58,30 @@ export function MainContent({ user, project }: MainContentProps) {
             {/* Right Panel - Preview/Code */}
             <ResizablePanel defaultSize={65}>
               <div className="h-full flex flex-col bg-white">
-                {/* Top Bar */}
-                <div className="h-14 border-b border-neutral-200/60 px-6 flex items-center justify-between bg-neutral-50/50">
-                  <Tabs
-                    value={activeView}
-                    onValueChange={(v) =>
-                      setActiveView(v as "preview" | "code")
-                    }
-                  >
+                <Tabs
+                  value={activeView}
+                  onValueChange={(v) =>
+                    setActiveView(v as "preview" | "code")
+                  }
+                  className="h-full flex flex-col"
+                >
+                  {/* Top Bar */}
+                  <div className="h-14 border-b border-neutral-200/60 px-6 flex items-center justify-between bg-neutral-50/50">
                     <TabsList className="bg-white/60 border border-neutral-200/60 p-0.5 h-9 shadow-sm">
                       <TabsTrigger value="preview" className="data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm text-neutral-600 px-4 py-1.5 text-sm font-medium transition-all">Preview</TabsTrigger>
                       <TabsTrigger value="code" className="data-[state=active]:bg-white data-[state=active]:text-neutral-900 data-[state=active]:shadow-sm text-neutral-600 px-4 py-1.5 text-sm font-medium transition-all">Code</TabsTrigger>
                     </TabsList>
-                  </Tabs>
-                  <HeaderActions user={user} projectId={project?.id} />
-                </div>
+                    <HeaderActions user={user} projectId={project?.id} />
+                  </div>
 
-                {/* Content Area */}
-                <div className="flex-1 overflow-hidden bg-neutral-50">
-                  {activeView === "preview" ? (
+                  {/* Content Area */}
+                  <TabsContent value="preview" className="flex-1 overflow-hidden bg-neutral-50 m-0">
                     <div className="h-full bg-white">
                       <PreviewFrame />
                     </div>
-                  ) : (
+                  </TabsContent>
+
+                  <TabsContent value="code" className="flex-1 overflow-hidden bg-neutral-50 m-0">
                     <ResizablePanelGroup
                       direction="horizontal"
                       className="h-full"
@@ -105,8 +106,8 @@ export function MainContent({ user, project }: MainContentProps) {
                         </div>
                       </ResizablePanel>
                     </ResizablePanelGroup>
-                  )}
-                </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
